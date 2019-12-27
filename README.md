@@ -5,18 +5,18 @@ CDI (Container Device Interface), is a specification, for container runtimes, to
 CDI concerns itself only with enabling container to be device aware and removing allocated resources when the container is deleted. Areas like resource management is explicitly left out of CDI (and is expected to be handled by the orchestrator). Because of this focus, CDI has a wide range of support and the specification is simple to implement.
 
 As well as the specification, this repository contains reference plugins.
+CDI is based on the Container Networking Interface model and specification.
 
 ## Why is CDI needed?
 
 On Linux, making a container device aware used to be as simple as exposing a device node in that container. As device and software grows more complex, making a container device aware requires more operations to be performed, such as:
-    - Host / Device / Container requirement checks 
-    - Exposing multiple device nodes from the host (e.g: control nodes)
-    - Exposing libraries or executable from the host
-    - Hiding procfs entries
-    - Performing runtime specific operations (e.g: VM vs linux containers based runtimes)
-    - Cleaning up the device adter a container stopped (e.g: scrubbing the memory)
+    - Expose the device to the container. This often requires several operations such as exposing additional device nodes, mounting files from the runtime namespace or hide procfs entries.
+    - Perform compatibility checks between the container and the device.
+    - Perform runtime specific operations (e.g: VM vs linux containers based runtimes).
+    - Clean up the device after a container stopped (e.g: scrubbing the memory).
 
-There is also currently no standard to write a plugin for container runtimes. This leads vendors having to write multiple plugins for different runtimes, as well as runtimes and orchestrator implementing their own plugin system.
+Finally in the absence of a standard for third party devices, vendors often have to write and maintain multiple plugins for different runtimes.
+Additionally runtimes don't uniformly expose a plugin system (or even expose a plugin system at all) leading to duplication of the functionality in higher level abstractions (such as Kubernetes device plugins).
 
 ## Issues and Contributing
 
