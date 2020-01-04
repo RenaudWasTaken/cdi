@@ -18,6 +18,35 @@ On Linux, making a container device aware used to be as simple as exposing a dev
 Finally in the absence of a standard for third party devices, vendors often have to write and maintain multiple plugins for different runtimes.
 Additionally runtimes don't uniformly expose a plugin system (or even expose a plugin system at all) leading to duplication of the functionality in higher level abstractions (such as Kubernetes device plugins).
 
+## Examples
+```bash
+$ mkdir /etc/cdi
+$ cat > /etc/cdi/vendor.json <<EOF
+{
+  "cdiVersion": "0.2.0",
+  "kind": "vendor.com/device",
+  "devices": [
+    { "name": "myDevice", "devicePath": "/dev/vendor0"}
+    { "name": "myDevice2", "devicePath": "/dev/vendor1"}
+  ],
+  "containerSpec": {
+    "devices": [
+      {"HostPath": "/dev/vendorctl", "ContainerPath": "/dev/vendorctl"},
+    ],
+    "mounts": [
+      {"HostPath": "/bin/vendorBin", "ContainerPath": "/bin/vendorBin"},
+      {"HostPath": "/usr/lib/libVendor.so.0", "ContainerPath": "/usr/lib/libVendor.so"}
+    ],
+    "hooks": [
+      {"create-container": {"path": "/bin/vendor-hook"} },
+      {"start-container": {"path": "/usr/bin/ldconfig"} },
+    ]
+  }
+}
+EOF
+
+```
+
 ## Issues and Contributing
 
 [Checkout the Contributing document!](CONTRIBUTING.md)
