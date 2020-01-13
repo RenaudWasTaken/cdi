@@ -136,18 +136,19 @@ The `cdiVersion` field specifies a [Semantic Version 2.0](https://semver.org) of
 The `kind` field specifies a label which uniquely identifies the device vendor.
 It can be used on the CLI to disambiguate the vendor that matches a device, e.g: `docker/podman run --device vendor.com/device=foo ...`.
 
-**Error handling:**
+_Error handling:_
   * Two or more files with identical `kind` values.
     Container runtimes should surface this error when any device with that `kind` is requested.
 
+#### KindShort
 The `kindShort` field is a list of labels that can be used by vendors to disambiguate the vendor but reduce the verbosity of the CLI.
 For example: `{"kind": "vendor.com/hwdevice", "kindShort": ["hwdevice"]}` paired with the following CLI, `docker/podman run --device hwdevice=foo ...`.
 
-**Error handling:**
+_Error handling:_
   * Two or more files with identical `kindShort` values.
     Container runtimes should only surface an error if the CLI request is ambiguous.
 
-**Label Format**
+_Label Format_
 The `kind` and `kindShort` labels have two segments: a prefix and a name, separated by a slash (/). The name segment is required and must be 63 characters or less, beginning and ending with an alphanumeric character ([a-z0-9A-Z]) with dashes (-), underscores (\_), dots (.), and alphanumerics between. The prefix must be a DNS subdomain: a series of DNS labels separated by dots (.), not longer than 253 characters in total, followed by a slash (/).
 
 Examples (not an exhaustive list):
