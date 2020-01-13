@@ -45,6 +45,16 @@ $ cat > /etc/cdi/vendor.json <<EOF
 }
 EOF
 
+# CLI examples below
+
+# Verbose
+$ docker/podman run --device vendor.com/device=myDevice --device vendor.com/device=myDevice2 ...
+
+# Infer vendor from name
+$ docker/podman run --device myDevice ...
+
+# Special case
+$ docker/podman run --device vendor.com/device=all ...
 ```
 
 ## Issues and Contributing
