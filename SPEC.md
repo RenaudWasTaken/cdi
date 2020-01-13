@@ -68,8 +68,7 @@ The key words "must", "must not", "required", "shall", "shall not", "should", "s
 ```
 {
     "cdiVersion": "0.1.0",
-    "kind": "<kind>",
-    "kindShort": ["<short-kind>"], (optional)
+    "kind": "<name>",
 
     "devices": [
         {
@@ -123,50 +122,37 @@ The key words "must", "must not", "required", "shall", "shall not", "should", "s
 }
 ```
 
-### Field Description
+#### Specification version
 
-Fields have the following definition and requirements:
-
-#### Version
-
-The `cdiVersion` field specifies a [Semantic Version 2.0](https://semver.org) of the CDI specification used by the vendor.
+* `cdiVersion` (string, REQUIRED) MUST be in [Semantic Version 2.0](https://semver.org) and specifies the version of the CDI specification used by the vendor.
 
 #### Kind
 
-The `kind` field specifies a label which uniquely identifies the device vendor.
-It can be used on the CLI to disambiguate the vendor that matches a device, e.g: `docker/podman run --device vendor.com/device=foo ...`.
-
-_Error handling:_
-  * Two or more files with identical `kind` values.
-    Container runtimes should surface this error when any device with that `kind` is requested.
-
-#### KindShort
-The `kindShort` field is a list of labels that can be used by vendors to disambiguate the vendor but reduce the verbosity of the CLI.
-For example: `{"kind": "vendor.com/hwdevice", "kindShort": ["hwdevice"]}` paired with the following CLI, `docker/podman run --device hwdevice=foo ...`.
-
-_Error handling:_
-  * Two or more files with identical `kindShort` values.
-    Container runtimes should only surface an error if the CLI request is ambiguous.
-
-_Label Format:_
-  * The `kind` and `kindShort` labels have two segments: a prefix and a name, separated by a slash (/).
-  * The name segment is required and must be 63 characters or less, beginning and ending with an alphanumeric character ([a-z0-9A-Z]) with dashes (-), underscores (\_), dots (.), and alphanumerics between.
-  * The prefix must be a DNS subdomain: a series of DNS labels separated by dots (.), not longer than 253 characters in total, followed by a slash (/).
-  * Examples (not an exhaustive list):
-    * Valid: `vendor.com/foo`, `foo.bar.baz/foo-bar123.B_az`
-    * Invalid: `foo`, `vendor.com/foo/`, `vendor.com/foo/bar`
+* `kind` (string, REQUIRED) field specifies a label which uniquely identifies the device vendor.
+  It can be used on the CLI to disambiguate the vendor that matches a device, e.g: `docker/podman run --device vendor.com/device=foo ...`.
+  * _Error handling:_
+    * Two or more files with identical `kind` values.
+      Container runtimes should surface this error when any device with that `kind` is requested.
+  * _Label Format:_
+    * The `kind` and `kindShort` labels have two segments: a prefix and a name, separated by a slash (/).
+    * The name segment is required and must be 63 characters or less, beginning and ending with an alphanumeric character ([a-z0-9A-Z]) with dashes (-), underscores (\_), dots (.), and alphanumerics between.
+    * The prefix must be a DNS subdomain: a series of DNS labels separated by dots (.), not longer than 253 characters in total, followed by a slash (/).
+    * Examples (not an exhaustive list):
+      * Valid: `vendor.com/foo`, `foo.bar.baz/foo-bar123.B_az`.
+      * Invalid: `foo`, `vendor.com/foo/`, `vendor.com/foo/bar`.
 
 #### Devices
 
 The `devices` field describes the set of hardware devices that can be refered to by the CLI.
+  * `name` (string, REQUIRED), name of the device, can be used to refer to it on the CLI
+    * Beginning and ending with an alphanumeric character ([a-z0-9A-Z]) with dashes (-), underscores (\_), dots (.), and alphanumerics between.
+    * e.g: e.g: `docker/podman run --device foo ...`
+  * `nameShort` (array of strings, OPTIONAL), alternative names for the device. Can be used to reduce the CLI verbosity
+    * Entries in the array MUST use the same schema as the entry for the `name` field
+  * `hostPath`
+  * `containerPath`
+  * `permissions`
 
-A device has a `name` that can be used to refer to it on the CLI: `docker/podman run --device foo ...`.
-A device has a list of `nameShort` that can be used to refer to it on the CLI: `docker/podman run --device foo ...`.
-
-A device will always match a linux device node.
-- `names` is a list of names that can be used to refer to a specific device.
-- `devicePath` is the path of the device node to be 
-
-**Container Spec**
+#### Container Spec
 
 ## CDI CLI Specification
