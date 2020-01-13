@@ -148,12 +148,13 @@ _Error handling:_
   * Two or more files with identical `kindShort` values.
     Container runtimes should only surface an error if the CLI request is ambiguous.
 
-_Label Format_
-The `kind` and `kindShort` labels have two segments: a prefix and a name, separated by a slash (/). The name segment is required and must be 63 characters or less, beginning and ending with an alphanumeric character ([a-z0-9A-Z]) with dashes (-), underscores (\_), dots (.), and alphanumerics between. The prefix must be a DNS subdomain: a series of DNS labels separated by dots (.), not longer than 253 characters in total, followed by a slash (/).
-
-Examples (not an exhaustive list):
-  * Valid: `vendor.com/foo`, `foo.bar.baz/foo-bar123.B_az`
-  * Invalid: `foo`, `vendor.com/foo/`, `vendor.com/foo/bar`
+_Label Format:_
+  * The `kind` and `kindShort` labels have two segments: a prefix and a name, separated by a slash (/).
+  * The name segment is required and must be 63 characters or less, beginning and ending with an alphanumeric character ([a-z0-9A-Z]) with dashes (-), underscores (\_), dots (.), and alphanumerics between.
+  * The prefix must be a DNS subdomain: a series of DNS labels separated by dots (.), not longer than 253 characters in total, followed by a slash (/).
+  * Examples (not an exhaustive list):
+    * Valid: `vendor.com/foo`, `foo.bar.baz/foo-bar123.B_az`
+    * Invalid: `foo`, `vendor.com/foo/`, `vendor.com/foo/bar`
 
 #### Devices
 
