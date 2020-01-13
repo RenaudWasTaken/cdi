@@ -34,12 +34,12 @@ A. Device Installation
    2. The device driver installation software writes a JSON file at a well known path (`/etc/cdi/vendor.json`).
 
 B. Container Runtime
-   3. A user runs a container with the argument `--device` followed by a device name.
-   4. The container runtime reads the JSON file.
-   5. The container runtime validates that the device is described in the JSON file.
-   6. The container runtime pulls the container image.
-   7. The container runtime generates an OCI specification.
-   8. The container runtime transforms the OCI specification according to the instructions in the JSON file
+   1. A user runs a container with the argument `--device` followed by a device name.
+   2. The container runtime reads the JSON file.
+   3. The container runtime validates that the device is described in the JSON file.
+   4. The container runtime pulls the container image.
+   5. The container runtime generates an OCI specification.
+   6. The container runtime transforms the OCI specification according to the instructions in the JSON file
 
 
 [cni]: https://github.com/containernetworking/cni
@@ -154,3 +154,17 @@ Examples (not an exhaustive list):
   * Valid: `vendor.com/foo`, `foo.bar.baz/foo-bar123.B_az`
   * Invalid: `foo`, `vendor.com/foo/`, `vendor.com/foo/bar`
 
+#### Devices
+
+The `devices` field describes the set of hardware devices that can be refered to by the CLI.
+
+A device has a `name` that can be used to refer to it on the CLI: `docker/podman run --device foo ...`.
+A device has a list of `nameShort` that can be used to refer to it on the CLI: `docker/podman run --device foo ...`.
+
+A device will always match a linux device node.
+- `names` is a list of names that can be used to refer to a specific device.
+- `devicePath` is the path of the device node to be 
+
+**Container Spec**
+
+## CDI CLI Specification
