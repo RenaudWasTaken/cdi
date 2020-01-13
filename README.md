@@ -31,11 +31,11 @@ $ cat > /etc/cdi/vendor.json <<EOF
   ],
   "containerSpec": {
     "devices": [
-      {"HostPath": "/dev/vendorctl", "ContainerPath": "/dev/vendorctl"},
+      {"hostPath": "/dev/vendorctl", "containerPath": "/dev/vendorctl"},
     ],
     "mounts": [
-      {"HostPath": "/bin/vendorBin", "ContainerPath": "/bin/vendorBin"},
-      {"HostPath": "/usr/lib/libVendor.so.0", "ContainerPath": "/usr/lib/libVendor.so"}
+      {"hostPath": "/bin/vendorBin", "containerPath": "/bin/vendorBin"},
+      {"hostPath": "/usr/lib/libVendor.so.0", "containerPath": "/usr/lib/libVendor.so"}
     ],
     "hooks": [
       {"create-container": {"path": "/bin/vendor-hook"} },
