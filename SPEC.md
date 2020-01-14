@@ -69,22 +69,22 @@ The key words "must", "must not", "required", "shall", "shall not", "should", "s
 {
     "cdiVersion": "0.1.0",
     "kind": "<name>",
+    "container-runtime": ["<container-runtime-name>"], (optional)
 
     "devices": [
         {
             "name": "<name>",
             "nameShort": ["<short-name>", "<short-name>"], (optional)
-            "hostPath": "<path>",
-            "containerPath": "<path>",
 
-            // Cgroups permissions of the device, candidates are one or more of
-            // * r - allows container to read from the specified device.
-            // * w - allows container to write to the specified device.
-            // * m - allows container to create device files that do not yet exist.
-            "permissions": "<permissions>" (optional)
+            // Same as the below containerSpec field.
+            // This field should only be applied to the Container's OCI spec
+            // if the device is specified on the CLI.
+            "containerSpec": { ... }
         }
     ],
 
+    // This field should be applied to the Container's OCI spec if any of the
+    // devices defined above are requested on the CLI
     "containerSpec": [
         {
             "devices": [ (optional)
@@ -108,13 +108,11 @@ The key words "must", "must not", "required", "shall", "shall not", "should", "s
             ],
             "hooks": [ (optional)
                 {
-                    "<OCI Hook Name>":
-                        {
-                            "path": "<path>",
-                            "args": ["<arg>", "<arg>"], (optional)
-                            "env":  [ "<envName>=<envValue>"], (optional)
-                            "timeout": <int> (optional)
-                        }
+                    "hookName": "<hookName>",
+                    "path": "<path>",
+                    "args": ["<arg>", "<arg>"], (optional)
+                    "env":  [ "<envName>=<envValue>"], (optional)
+                    "timeout": <int> (optional)
                 }
             ]
         }
@@ -152,13 +150,39 @@ Note: For a CDI file to be valid, at least one entry must be specified in this a
       * e.g: e.g: `docker/podman run --device foo ...`
     * `nameShort` (array of strings, OPTIONAL), alternative names for the device. Can be used to reduce the CLI verbosity
       * Entries in the array MUST use the same schema as the entry for the `name` field
+    * `containerSpec` (object, OPTIONAL) this field is described in the next section.
+      * This field should only be merged in the OCI spec if the device has been requested on the CLI
+
+
+#### Container Spec
+
+The `containerSpec` field describes edits to be made to the OCI specification. Currently only three kinds of edits can be made to the OCI specification: `devices`, `mounts` and `hooks`.
+
+The `containerSpec` field is referenced in two places in the specification:
+  * At the device level, where the edits MUST only be made if the matching device is specified on the CLI
+  * At the container level, where the edits MUST be made if any of the of the device defined in the `devices` field are specified on the CLI.
+
+
+The `containerSpec` field has the following definition:
+  * `devices` (array of objects, OPTIONAL) describes the device nodes that should be mounted:
     * `hostPath` (string, REQUIRED) path of the device on the host.
     * `containerPath` (string, REQUIRED) path of the device within the container.
     * `permissions` (string, OPTIONAL) Cgroups permissions of the device, candidates are one or more of:
       * r - allows container to read from the specified device.
       * w - allows container to write to the specified device.
       * m - allows container to create device files that do not yet exist.
+  * `mounts` (array of objects, OPTIONAL) describes the mounts that should be mounted:
+    * `hostPath` (string, REQUIRED) path of the device on the host.
+    * `containerPath` (string, REQUIRED) path of the device within the container.
+    * `permissions` (string, OPTIONAL) Cgroups permissions of the device, candidates are one or more of:
+  * `hooks` (array of objects, OPTIONAL) describes the hooks that should be ran:
+    * `hookName` is the name of the hook to invoke, if the runtime is OCI compliant it should be one of {createRuntime, createContainer, startContainer, poststart, poststop}.
+      Runtimes are free to allow custom hooks but it is advised for vendors to create a specific JSON file targeting that runtime
+    * `path` (string, REQUIRED) with similar semantics to IEEE Std 1003.1-2008 execv's path. This specification extends the IEEE standard in that path MUST be absolute.
+    * `args` (array of strings, OPTIONAL) with the same semantics as IEEE Std 1003.1-2008 execv's argv.
+    * `env` (array of strings, OPTIONAL) with the same semantics as IEEE Std 1003.1-2008's environ.
+    * `timeout` (int, OPTIONAL) is the number of seconds before aborting the hook. If set, timeout MUST be greater than zero.
 
-#### Container Spec
-
-## CDI CLI Specification
+## Error Handling
+  * Two or more files with identical `kind` values and identical `containerRuntime` field.
+    Container runtimes should surface this error when any device with that `kind` is requested.
