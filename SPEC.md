@@ -128,16 +128,19 @@ The key words "must", "must not", "required", "shall", "shall not", "should", "s
 
 * `kind` (string, REQUIRED) field specifies a label which uniquely identifies the device vendor.
   It can be used on the CLI to disambiguate the vendor that matches a device, e.g: `docker/podman run --device vendor.com/device=foo ...`.
-  * _Error handling:_
-    * Two or more files with identical `kind` values.
-      Container runtimes should surface this error when any device with that `kind` is requested.
-  * _Label Format:_
     * The `kind` and `kindShort` labels have two segments: a prefix and a name, separated by a slash (/).
     * The name segment is required and must be 63 characters or less, beginning and ending with an alphanumeric character ([a-z0-9A-Z]) with dashes (-), underscores (\_), dots (.), and alphanumerics between.
     * The prefix must be a DNS subdomain: a series of DNS labels separated by dots (.), not longer than 253 characters in total, followed by a slash (/).
     * Examples (not an exhaustive list):
       * Valid: `vendor.com/foo`, `foo.bar.baz/foo-bar123.B_az`.
       * Invalid: `foo`, `vendor.com/foo/`, `vendor.com/foo/bar`.
+
+#### Container Runtime
+
+* `containerRuntime` (array of string, OPTIONAL) indicates that this CDI specification targets only a specific container runtime.
+  If this field is not indicated then container runtimes should consider that the JSON file targets all runtimes.
+  If this field is indicated then container runtimes should only run it if one of the identifiers matches the container runtime's identifier.
+  Possible values (not an exhaustive list): docker, podman, gvisor, lxc
 
 #### Devices
 
