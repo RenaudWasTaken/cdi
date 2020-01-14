@@ -144,14 +144,20 @@ The key words "must", "must not", "required", "shall", "shall not", "should", "s
 #### Devices
 
 The `devices` field describes the set of hardware devices that can be refered to by the CLI.
-  * `name` (string, REQUIRED), name of the device, can be used to refer to it on the CLI
-    * Beginning and ending with an alphanumeric character ([a-z0-9A-Z]) with dashes (-), underscores (\_), dots (.), and alphanumerics between.
-    * e.g: e.g: `docker/podman run --device foo ...`
-  * `nameShort` (array of strings, OPTIONAL), alternative names for the device. Can be used to reduce the CLI verbosity
-    * Entries in the array MUST use the same schema as the entry for the `name` field
-  * `hostPath`
-  * `containerPath`
-  * `permissions`
+Note: For a CDI file to be valid, at least one entry must be specified in this array.
+
+  * `devices` (array of objects, REQUIRED) list of devices provided by the vendor.
+    * `name` (string, REQUIRED), name of the device, can be used to refer to it on the CLI
+      * Beginning and ending with an alphanumeric character ([a-z0-9A-Z]) with dashes (-), underscores (\_), dots (.), and alphanumerics between.
+      * e.g: e.g: `docker/podman run --device foo ...`
+    * `nameShort` (array of strings, OPTIONAL), alternative names for the device. Can be used to reduce the CLI verbosity
+      * Entries in the array MUST use the same schema as the entry for the `name` field
+    * `hostPath` (string, REQUIRED) path of the device on the host.
+    * `containerPath` (string, REQUIRED) path of the device within the container.
+    * `permissions` (string, OPTIONAL) Cgroups permissions of the device, candidates are one or more of:
+      * r - allows container to read from the specified device.
+      * w - allows container to write to the specified device.
+      * m - allows container to create device files that do not yet exist.
 
 #### Container Spec
 
