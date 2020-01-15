@@ -26,12 +26,19 @@ $ cat > /etc/cdi/vendor.json <<EOF
   "cdiVersion": "0.2.0",
   "kind": "vendor.com/device",
   "devices": [
-    { "name": "myDevice", "devicePath": "/dev/vendor0"}
-    { "name": "myDevice2", "devicePath": "/dev/vendor1"}
+    {
+      "name": "myDevice",
+      "containerSpec": {
+        "devices": [
+          {"hostPath": "/dev/card1", "containerPath": "/dev/card1"}
+          {"hostPath": "/dev/card-render1", "containerPath": "/dev/card-render1"}
+        ],
+      }
+    }
   ],
   "containerSpec": {
     "devices": [
-      {"hostPath": "/dev/vendorctl", "containerPath": "/dev/vendorctl"},
+      {"hostPath": "/dev/vendorctl", "containerPath": "/dev/vendorctl"}
     ],
     "mounts": [
       {"hostPath": "/bin/vendorBin", "containerPath": "/bin/vendorBin"},
@@ -39,7 +46,7 @@ $ cat > /etc/cdi/vendor.json <<EOF
     ],
     "hooks": [
       {"create-container": {"path": "/bin/vendor-hook"} },
-      {"start-container": {"path": "/usr/bin/ldconfig"} },
+      {"start-container": {"path": "/usr/bin/ldconfig"} }
     ]
   }
 }
@@ -50,7 +57,7 @@ EOF
 # Verbose
 $ docker/podman run --device vendor.com/device=myDevice --device vendor.com/device=myDevice2 ...
 
-# Infer vendor from name
+# Less verbose, through infering the vendor from the device name
 $ docker/podman run --device myDevice ...
 
 # Special case
