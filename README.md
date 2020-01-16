@@ -25,7 +25,7 @@ $ cat > /etc/cdi/vendor.json <<EOF
 {
   "cdiVersion": "0.2.0",
   "kind": "vendor.com/device",
-  "devices": [
+  "cdiDevices": [
     {
       "name": "myDevice",
       "containerSpec": {

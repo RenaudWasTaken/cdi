@@ -71,14 +71,14 @@ The key words "must", "must not", "required", "shall", "shall not", "should", "s
     "kind": "<name>",
     "container-runtime": ["<container-runtime-name>"], (optional)
 
-    "devices": [
+    "cdiDevices": [
         {
             "name": "<name>",
             "nameShort": ["<short-name>", "<short-name>"], (optional)
 
             // Same as the below containerSpec field.
             // This field should only be applied to the Container's OCI spec
-            // if the device is specified on the CLI.
+            // if that specific device is requested.
             "containerSpec": { ... }
         }
     ],
@@ -127,7 +127,7 @@ The key words "must", "must not", "required", "shall", "shall not", "should", "s
 #### Kind
 
 * `kind` (string, REQUIRED) field specifies a label which uniquely identifies the device vendor.
-  It can be used on the CLI to disambiguate the vendor that matches a device, e.g: `docker/podman run --device vendor.com/device=foo ...`.
+  It can be used to disambiguate the vendor that matches a device, e.g: `docker/podman run --device vendor.com/device=foo ...`.
     * The `kind` and `kindShort` labels have two segments: a prefix and a name, separated by a slash (/).
     * The name segment is required and must be 63 characters or less, beginning and ending with an alphanumeric character ([a-z0-9A-Z]) with dashes (-), underscores (\_), dots (.), and alphanumerics between.
     * The prefix must be a DNS subdomain: a series of DNS labels separated by dots (.), not longer than 253 characters in total, followed by a slash (/).
@@ -142,19 +142,19 @@ The key words "must", "must not", "required", "shall", "shall not", "should", "s
   If this field is indicated then container runtimes should only run it if one of the identifiers matches the container runtime's identifier.
   Possible values (not an exhaustive list): docker, podman, gvisor, lxc
 
-#### Devices
+#### CDI Devices
 
-The `devices` field describes the set of hardware devices that can be refered to by the CLI.
+The `cdiDevices` field describes the set of hardware devices that can be requested by the container runtime user.
 Note: For a CDI file to be valid, at least one entry must be specified in this array.
 
-  * `devices` (array of objects, REQUIRED) list of devices provided by the vendor.
-    * `name` (string, REQUIRED), name of the device, can be used to refer to it on the CLI
+  * `cdiDevices` (array of objects, REQUIRED) list of devices provided by the vendor.
+    * `name` (string, REQUIRED), name of the device, can be used to refer to it when requesting a device.
       * Beginning and ending with an alphanumeric character ([a-z0-9A-Z]) with dashes (-), underscores (\_), dots (.), and alphanumerics between.
-      * e.g: e.g: `docker/podman run --device foo ...`
+      * e.g: `docker/podman run --device foo ...`
     * `nameShort` (array of strings, OPTIONAL), alternative names for the device. Can be used to reduce the CLI verbosity
       * Entries in the array MUST use the same schema as the entry for the `name` field
     * `containerSpec` (object, OPTIONAL) this field is described in the next section.
-      * This field should only be merged in the OCI spec if the device has been requested on the CLI
+      * This field should only be merged in the OCI spec if the device has been requested by the container runtime user.
 
 
 #### Container Spec
@@ -162,8 +162,8 @@ Note: For a CDI file to be valid, at least one entry must be specified in this a
 The `containerSpec` field describes edits to be made to the OCI specification. Currently only three kinds of edits can be made to the OCI specification: `devices`, `mounts` and `hooks`.
 
 The `containerSpec` field is referenced in two places in the specification:
-  * At the device level, where the edits MUST only be made if the matching device is specified on the CLI
-  * At the container level, where the edits MUST be made if any of the of the device defined in the `devices` field are specified on the CLI.
+  * At the device level, where the edits MUST only be made if the matching device is requested by the container runtime user.
+  * At the container level, where the edits MUST be made if any of the of the device defined in the `devices` field are requested.
 
 
 The `containerSpec` field has the following definition:
