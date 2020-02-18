@@ -1,5 +1,4 @@
-# Contribute to the NVIDIA Container Toolkit
-
+# Contribute to CDI
 Want to contribute to the Container Device Interface Project? Awesome!
 We only require you to sign your work, the below section describes this!
 
