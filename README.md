@@ -16,7 +16,7 @@ However, as devices and software grows more complex, vendors want to perform mor
 - Performing runtime specific operations (e.g: VM vs linux containers based runtimes).
 - Performing device specific operations (e.g: scrubbing the memory of a GPU or reconfiguring an FPGA).
 
-In the absence of a standard for third party devices, vendors often have to write and maintain multiple plugins for different runtimes.
+In the absence of a standard for third party devices, vendors often have to write and maintain multiple plugins for different runtimes or even directly contribute vendor specific code in the runtime.
 Additionally runtimes don't uniformly expose a plugin system (or even expose a plugin system at all) leading to duplication of the functionality in higher level abstractions (such as Kubernetes device plugins).
 
 ## Examples
