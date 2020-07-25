@@ -1,4 +1,8 @@
 # CDI - The Container Device Interface
+## Moved to https://github.com/container-orchestrated-devices/container-device-interface
+
+**This repository is deprecated. Further development will happen here: https://github.com/container-orchestrated-devices/container-device-interface**
+
 ## What is CDI?
 CDI (Container Device Interface), is a specification, for container runtimes, to support third party devices.
 
